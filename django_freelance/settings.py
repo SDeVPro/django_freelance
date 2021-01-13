@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,6 +37,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #myapp
+    'freelance',
+    #other app
+    'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
+    'corsheaders',
+    # 'oauth2_provider',
+    # 'social_django',
+    # 'rest_framework_social_oauth',
+
 ]
 
 MIDDLEWARE = [
@@ -46,7 +57,9 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'django_freelance.urls'
@@ -75,8 +88,12 @@ WSGI_APPLICATION = 'django_freelance.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'foo',
+        'USER': 'postgres',
+        'PASSWORD': '123',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
@@ -98,8 +115,43 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:8080",
+]
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'POST',
+    'OPTIONS',
+    'PATCH',
+    'PUT',
+]
 
-
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES':[
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_PARSER_CLASSES':[
+        'rest_framework.parsers.JSONParser',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES':[
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework_social_oauth2.authentication.SocialAuthentication',
+    ],
+    'AUTH_TOKEN_CLASSES':[
+        'rest_framework_simplejwt.tokens.AccessToken',
+        'rest_framework_simplejwt.tokens.SlidingToken',
+    ]
+}
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.vk.VKOAuth2',
+    'rest_framework_social_oauth2.backends.DjangoOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+]
+SOCIAL_AUTH_VK_OAUTH2_KEY = '7725160'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = 'eZtUOjqgNhNBkcGnZ4Wl'
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
